@@ -36,6 +36,7 @@
 /question_list
 /questions_resolved
 ```
+---
 
 ## Авторы
 ### Смирнов Лев
