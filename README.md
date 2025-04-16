@@ -35,3 +35,8 @@
 /faq
 /question_list
 /questions_resolved
+```
+
+## Авторы
+### Смирнов Лев
+### Данила Украинцев
