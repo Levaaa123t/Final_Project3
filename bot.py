@@ -20,14 +20,16 @@ db_commands = DB_questions()
 set_def_commands = [
     BotCommand("start", "Запуск бота"),
     BotCommand("faq", "Список часто задаваемых вопросов"),
-    BotCommand("questions", "Задать свой вопрос(/questions Ваш вопрос)")
+    BotCommand("questions", "Задать свой вопрос(/questions Ваш вопрос)"),
+    BotCommand("help","Помощь по командам")
 ]
 
 set_admin_commands = [
     BotCommand("start", "Запуск бота"),
     BotCommand("faq", "Список часто задаваемых вопросов"),
     BotCommand("questions_list", "Показать список вопросов которые ожидают ответа"),
-    BotCommand("questions_resolved","Показать список вопросов которые уже решены")
+    BotCommand("questions_resolved","Показать список вопросов которые уже решены"),
+    BotCommand("help","Помощь по командам")
 ]
 
 admin_id = admin_id
@@ -35,13 +37,31 @@ bot.set_my_commands(set_def_commands)
 scope = types.BotCommandScopeChat(admin_id)
 bot.set_my_commands(set_admin_commands, scope=scope)
 
+
 @bot.message_handler(commands=['start'])
 def start(message):
     check = db_commands.check_id(user_id=message.from_user.id )
     if check:
-        bot.send_message(message.chat.id,f'Привет администратор {message.from_user.first_name}! Если хочешь ответить на вопросы пользователей используй команду /questions_list \nЕсли хочешь помочь мне используй команду /questions_resolved')
+        bot.send_message(message.chat.id,f'Привет администратор {message.from_user.first_name}! Если ты забыл команды просто используй команду /help')
     else:
-        bot.send_message(message.chat.id,'Привет я бот тех поддержка! Если у тебя есть вопросы то я могу помочь просто напиши /faq. Если я не смог тебе помочь обратись в тех поддержку с помощью команды /questions')
+        bot.send_message(message.chat.id,'Привет я бот тех поддержка! Напиши команду /help чтобы узнать что я умею')
+@bot.message_handler(commands=['faq'])
+def faq_questions(message):
+    info = db_commands.get_list_faq()
+    if info:
+        text = "⁉️Часто задаваемые вопросы:\n" + "\n".join([f'❓ {x[0]} \n {x[1]}' for x in info])
+    else:
+        text = 'Ой что-то пошло не так попробуйте еще раз чуть позже'
+    
+    bot.send_message(message.chat.id, text)
+    
+@bot.message_handler(commands=['help'])
+def start(message):
+    check = db_commands.check_id(user_id=message.from_user.id )
+    if check:
+        bot.send_message(message.chat.id,'Если хочешь ответить на вопросы пользователей используй команду /questions_list\nЕсли хочешь помочь мне используй команду /questions_resolved')
+    else:
+        bot.send_message(message.chat.id,'Если у тебя есть вопросы то попробуй поискать их здесь /faq. Если я не смог тебе помочь обратись в тех поддержку с помощью команды /questions')
 
 @bot.message_handler(commands=['faq'])
 def faq_questions(message):
