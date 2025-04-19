@@ -59,23 +59,6 @@ class DB_questions:
         sql = 'INSERT OR IGNORE INTO admins (user_id) VALUES (?)'
         data = [(admin_id,)]
         self.__executemany(sql, data)
-
-    # def get_answer(self, user_question):
-    #     """Автоматически отвечает на часто задаваемые вопросы"""
-    #     conn = sqlite3.connect(self.database)
-    #     cursor = conn.cursor()
-    #     words = user_question.split()
-    #     if len(words) <2:
-    #         return None
-    #     conditions = [f"question LIKE ?" for _ in words]
-    #     sql = "SELECT answer FROM questions WHERE " + " OR ".join(conditions)
-    #     parameters = [f"%{word}%" for word in words]
-    #     cursor.execute(sql, parameters)
-    #     answer = cursor.fetchone()
-    #     if answer:
-    #         return answer[0]
-    #     else:
-    #         return None
     
     def get_answer(self, user_question):
         conn = sqlite3.connect(self.database)
@@ -95,9 +78,6 @@ class DB_questions:
             return answer[0]
         else:
             return None
-        # cursor.execute("SELECT answer FROM questions WHERE question = ?", (user_question,))
-        # answer = cursor.fetchone()
-        # return answer[0] if answer else None
 
     def save_user_question(self, user_id, question):
         conn = sqlite3.connect(self.database)
